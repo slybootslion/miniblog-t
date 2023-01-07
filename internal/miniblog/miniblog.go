@@ -14,9 +14,9 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"miniblog/internal/pkg/log"
-	mw "miniblog/internal/pkg/middleware"
-	"miniblog/pkg/version/verflag"
+	"github.com/slybootslion/miniblog-t/internal/pkg/log"
+	mw "github.com/slybootslion/miniblog-t/internal/pkg/middleware"
+	"github.com/slybootslion/miniblog-t/pkg/version/verflag"
 )
 
 var cfgFile string

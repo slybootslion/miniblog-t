@@ -8,7 +8,7 @@ package log
 
 import (
 	"context"
-	"miniblog/internal/pkg/known"
+	"github.com/slybootslion/miniblog-t/internal/pkg/known"
 	"sync"
 	"time"
 

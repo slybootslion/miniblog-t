@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"miniblog/internal/pkg/log"
+	"github.com/slybootslion/miniblog-t/internal/pkg/log"
 )
 
 const (
