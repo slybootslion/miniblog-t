@@ -6,14 +6,17 @@
 package miniblog
 
 import (
-	"encoding/json"
+	"errors"
 	"fmt"
+	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/marmotedu/miniblog/internal/pkg/log"
-	"github.com/marmotedu/miniblog/pkg/version/verflag"
+	"miniblog/internal/pkg/log"
+	mw "miniblog/internal/pkg/middleware"
+	"miniblog/pkg/version/verflag"
 )
 
 var cfgFile string
@@ -75,10 +78,32 @@ Find more miniblog information at:
 
 // run 函数是实际的业务代码入口函数.
 func run() error {
-	// 打印所有的配置项及其值
-	settings, _ := json.Marshal(viper.AllSettings())
-	log.Infow(string(settings))
-	// 打印 db -> username 配置项的值
-	log.Infow(viper.GetString("db.username"))
+	// 设置Gin模式
+	gin.SetMode(viper.GetString("runmode"))
+	// 创建Gin引擎
+	g := gin.New()
+	// gin.Recovery() 中间件，用来捕获任何panic，并恢复
+	mws := []gin.HandlerFunc{gin.Recovery(), mw.RequestId()}
+	g.Use(mws...)
+	// 注册404
+	g.NoRoute(func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"code": 10003, "message": "page not fount."})
+	})
+	// 注册 /healthz
+	g.GET("/healthz", func(c *gin.Context) {
+		log.C(c).Infow("healthz function called.")
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	})
+	// 创建http server实例
+	httpsrv := &http.Server{Addr: viper.GetString("addr"), Handler: g}
+	// 运行http服务器
+	// 打印一条日志，用来提示HTTP服务已经启动，方便排障
+	log.Infow("start to listening th incoming requests on http address",
+		"addr",
+		viper.GetString("addr"))
+	if err := httpsrv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		log.Fatalw(err.Error())
+	}
+
 	return nil
 }

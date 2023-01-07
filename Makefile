@@ -11,7 +11,7 @@ OUTPUT_DIR := $(ROOT_DIR)/_output
 # 定义版本相关变量
 
 ## 指定应用使用的 version 包，会通过 `-ldflags -X` 向该包中指定的变量注入值
-VERSION_PACKAGE=github.com/marmotedu/miniblog/pkg/version
+VERSION_PACKAGE=github.com/slybootslion/miniblog-t/pkg/version
 
 ## 定义 VERSION 语义化版本号
 ifeq ($(origin VERSION), undefined)
@@ -33,8 +33,8 @@ GO_LDFLAGS += \
 
 # ==============================================================================
 # 定义 Makefile all 伪目标，执行 `make` 时，会默认会执行 all 伪目标
-.PHONY: all
-all: add-copyright format build
+#.PHONY: all
+#all: add-copyright format build
 
 # ==============================================================================
 # 定义其他需要的伪目标
@@ -47,13 +47,13 @@ build: tidy # 编译源码，依赖 tidy 目标自动添加/移除依赖包.
 format: # 格式化 Go 源码.
 	@gofmt -s -w ./
 
-.PHONY: add-copyright
-add-copyright: # 添加版权头信息.
-	@addlicense -v -f $(ROOT_DIR)/scripts/boilerplate.txt $(ROOT_DIR) --skip-dirs=third_party,vendor,$(OUTPUT_DIR)
+#.PHONY: add-copyright
+#add-copyright: # 添加版权头信息.
+#	@addlicense -v -f $(ROOT_DIR)/scripts/boilerplate.txt $(ROOT_DIR) --skip-dirs=third_party,vendor,$(OUTPUT_DIR)
 
-.PHONY: swagger
-swagger: # 启动 swagger 在线文档.
-	@swagger serve -F=swagger --no-open --port 65534 $(ROOT_DIR)/api/openapi/openapi.yaml
+#.PHONY: swagger
+#swagger: # 启动 swagger 在线文档.
+#	@swagger serve -F=swagger --no-open --port 65534 $(ROOT_DIR)/api/openapi/openapi.yaml
 
 .PHONY: tidy
 tidy: # 自动添加/移除依赖包.

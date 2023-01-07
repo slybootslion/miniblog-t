@@ -10,7 +10,7 @@ import (
 
 	_ "go.uber.org/automaxprocs"
 
-	"github.com/marmotedu/miniblog/internal/miniblog"
+	"miniblog/internal/miniblog"
 )
 
 // Go 程序的默认入口函数(主函数).
